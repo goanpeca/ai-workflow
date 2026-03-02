@@ -14,7 +14,7 @@ jobs:
   claude:
     if: >-
       (github.event_name == 'issues' && github.event.label.name == 'claude' && 
-       contains(fromJson('["mlr"]'), github.event.sender.login)) ||
+       contains(fromJson('["goanpeca", "mlr"]'), github.event.sender.login)) ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude') && 
        contains(fromJson('["OWNER", "MEMBER"]'), github.event.comment.author_association)) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude') && 
@@ -24,9 +24,9 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pull-requests: read
-      issues: read
+      contents: write
+      pull-requests: write
+      issues: write
       id-token: write
       actions: read # Required for Claude to read CI results on PRs
     steps:
@@ -39,7 +39,7 @@ jobs:
         id: claude
         uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
           # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
